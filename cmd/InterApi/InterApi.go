@@ -46,7 +46,7 @@ func (service *Service) Manage() (string, error) {
 		}
 	}
 	proc()
-	
+
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, os.Kill, syscall.SIGTERM)
 
@@ -55,7 +55,9 @@ func (service *Service) Manage() (string, error) {
 		case killSignal := <-interrupt:
 			config.Stdlog.Println("Got signal:", killSignal)
 			config.Stdlog.Println("Stoping DB Conntion : ", db.DB.Stats())
+			config.Stdlog.Println("Stoping DB2 Conntion : ", db.DB2.Stats())
 			defer db.DB.Close()
+			defer db.DB2.Close()
 			if killSignal == os.Interrupt {
 				return "Daemon was interrupted by system signal", nil
 			}
