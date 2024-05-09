@@ -5,6 +5,7 @@ import(
 	"os"
 	"os/signal"
 	"syscall"
+	"database/sql"
 
 	config "inter/config"
 	db "inter/dbpool"
@@ -99,16 +100,45 @@ func proc(){
 	})
 
 	r.POST("/set_pos", func(c *gin.Context){
-		
+		db := db.DB2
+
 		mp := Mapper{}
-		// ctx := c.Request.Context()
+		ctx := c.Request.Context()
 		err := c.ShouldBindJSON(&mp)
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
 		config.Stdlog.Println(mp.MemId)
 		config.Stdlog.Println(mp.PosId)
-		c.String(200, "테스트입니다2.")
+
+		var cnt sql.NullInt64
+		err = db.QueryRowContext(ctx, "select count(1) as cnt from key_mapper where mem_id = ?", mp.MemId).Scan(&cnt)
+		if err != nil {
+			config.Stdlog.Println(err)
+		}
+		if cnt.Int64 > 0 {
+			_, err := db.ExecContext(ctx, "update key_mapper set pos_id = ? where mem_id = ?", mp.PosId, mp.MemId)
+			if err != nil {
+				config.Stdlog.Println(err)
+				c.JSON(200, gin.H{
+					"code": 0,
+				})
+			}
+			c.JSON(200, gin.H{
+				"code": 1,
+			})
+		} else {
+			_, err := db.ExecContext(ctx, "insert into key_mapper values(?, ?)", mp.MemId, mp.PosId)
+			if err != nil {
+				config.Stdlog.Println(err)
+				c.JSON(200, gin.H{
+					"code": 0,
+				})
+			}
+			c.JSON(200, gin.H{
+				"code": 1,
+			})
+		}
 
 
 
