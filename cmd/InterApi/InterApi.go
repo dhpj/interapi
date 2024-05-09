@@ -85,7 +85,7 @@ func main() {
 }
 
 type Mapper struct {
-	MemId        int    `json:"mem_id"`
+	MemId        string `json:"mem_id"`
 	PosId        string `json:"pos_id"`
 }
 
