@@ -83,6 +83,11 @@ func main() {
 	fmt.Println(status)
 }
 
+type Mapper struct {
+	MemId        int    `json:"mem_id"`
+	PosId        string `json:"pos_id"`
+}
+
 func proc(){
 	config.Stdlog.Println("Inter API 시작")
 
@@ -91,6 +96,45 @@ func proc(){
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(200, "테스트입니다.")
+	})
+
+	r.POST("/set_pos", func(c *gin.Context){
+		
+		mp := Mapper{}
+		// ctx := c.Request.Context()
+		err := c.ShouldBindJSON(&mp)
+		if err != nil { 
+			config.Stdlog.Println(err)
+		}
+		config.Stdlog.Println(mp.MemId)
+		config.Stdlog.Println(mp.PosId)
+		c.String(200, "테스트입니다2.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	})
 	r.Run(":3333")
 }
