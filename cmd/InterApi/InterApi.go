@@ -147,16 +147,18 @@ func proc(){
 		}
 	})
 	r.POST("/get_goods", func(c *gin.Context){
+		config.Stdlog.Println("1")
 		db := db.DB
-
+		config.Stdlog.Println("2")
 		mp := Mapper{}
 		ctx := c.Request.Context()
 		err := c.ShouldBindJSON(&mp)
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
-
-		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = ?", mp.PosId)
+		config.Stdlog.Println("3")
+		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
+		config.Stdlog.Println("4")
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
