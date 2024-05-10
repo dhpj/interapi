@@ -167,6 +167,7 @@ func proc(){
 		for rows.Next(){
 			var goods Goods
 			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
+			config.Stdlog.Println(goods.GoodNm)
 			if err != nil { 
 				config.Stdlog.Println(err)
 			}
@@ -179,6 +180,7 @@ func proc(){
 		}
 
 		jsonString := string(jsonBytes)
+
 		c.JSON(200, gin.H{
 			"list": jsonString,
 		})
