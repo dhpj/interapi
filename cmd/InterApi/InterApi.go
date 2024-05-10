@@ -154,7 +154,7 @@ func proc(){
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
-		config.Stdlog.Println("select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
+
 		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
 		if err != nil { 
 			config.Stdlog.Println(err)
@@ -176,39 +176,13 @@ func proc(){
 		if err != nil {
 			panic(err)
 		}
-		config.Stdlog.Println("3")
 
 		jsonString := string(jsonBytes)
 
 		c.JSON(200, gin.H{
 			"list": jsonString,
 		})
-		config.Stdlog.Println("4")
 	})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	r.Run(":3333")
 }
