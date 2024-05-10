@@ -147,25 +147,21 @@ func proc(){
 		}
 	})
 	r.POST("/get_goods", func(c *gin.Context){
-		config.Stdlog.Println("1")
 		db := db.DB
-		config.Stdlog.Println("2")
 		mp := Mapper{}
 		ctx := c.Request.Context()
 		err := c.ShouldBindJSON(&mp)
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
-		config.Stdlog.Println("3")
 		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
-		config.Stdlog.Println("4")
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
 		defer rows.Close()
 
 		list := []Goods{}
-
+		config.Stdlog.Println("1")
 		for rows.Next(){
 			var goods Goods
 			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
@@ -175,17 +171,19 @@ func proc(){
 			}
 			list = append(list, goods)
 		}
-
+		config.Stdlog.Println("2")
 		jsonBytes, err := json.Marshal(list)
 		if err != nil {
 			panic(err)
 		}
+		config.Stdlog.Println("3")
 
 		jsonString := string(jsonBytes)
 
 		c.JSON(200, gin.H{
 			"list": jsonString,
 		})
+		config.Stdlog.Println("4")
 	})
 
 
