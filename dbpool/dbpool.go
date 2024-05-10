@@ -21,7 +21,7 @@ func InitDB() {
     password := "redpos3771"
     database := "test_db"
 
-    connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s", server, user, password, port, database)
+    connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;encrypt=disable", server, user, password, port, database)
 
 	db, err := sql.Open("sqlserver", connString)
 	if err != nil {
