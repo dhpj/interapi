@@ -91,10 +91,10 @@ type Mapper struct {
 }
 
 type Goods struct {
-	GoodCd sql.NullString
-	GoodNm sql.NullString
-	SalePrc sql.NullInt64
-	HangPrc sql.NullInt64
+	GoodCd string
+	GoodNm string
+	SalePrc int
+	HangPrc int
 }
 
 func proc(){
@@ -171,12 +171,7 @@ func proc(){
 			}
 			list = append(list, goods)
 		}
-		// jsonBytes, err := json.Marshal(list)
-		// if err != nil {
-		// 	panic(err)
-		// }
 
-		// jsonString := string(jsonBytes)
 
 		c.JSON(200, gin.H{
 			"list": list,
