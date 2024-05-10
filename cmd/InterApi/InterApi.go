@@ -91,7 +91,10 @@ type Mapper struct {
 }
 
 type Goods struct {
-
+	GoodCd string
+	GoodNm string
+	SalePrc string
+	HangPrc string
 }
 
 func proc(){
@@ -153,11 +156,24 @@ func proc(){
 			config.Stdlog.Println(err)
 		}
 
-		reqrows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = ?", mp.PosId)
+		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = ?", mp.PosId)
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
-		jsonBytes, err := json.Marshal(reqrows)
+		defer rows.Close()
+
+		list := []Goods{}
+
+		for rows.Next(){
+			var goods Goods
+			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
+			if err != nil { 
+				config.Stdlog.Println(err)
+			}
+			list = append(list, goods)
+		}
+
+		jsonBytes, err := json.Marshal(list)
 		if err != nil {
 			panic(err)
 		}
