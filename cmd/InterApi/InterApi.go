@@ -163,15 +163,14 @@ func proc(){
 		list := []Goods{}
 		config.Stdlog.Println("1")
 		for rows.Next(){
-			var goods Goods
-			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
-			config.Stdlog.Println(goods.GoodNm)
-			if err != nil { 
-				config.Stdlog.Println(err)
-			}
-			list = append(list, goods)
+			// var goods Goods
+			// err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
+			// config.Stdlog.Println(goods.GoodNm)
+			// if err != nil { 
+			// 	config.Stdlog.Println(err)
+			// }
+			// list = append(list, goods)
 		}
-		config.Stdlog.Println("2")
 		jsonBytes, err := json.Marshal(list)
 		if err != nil {
 			panic(err)
