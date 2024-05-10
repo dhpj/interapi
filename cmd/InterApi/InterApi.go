@@ -6,7 +6,7 @@ import(
 	"os/signal"
 	"syscall"
 	"database/sql"
-	"encoding/json"
+	// "encoding/json"
 
 	config "inter/config"
 	db "inter/dbpool"
@@ -171,15 +171,15 @@ func proc(){
 			}
 			list = append(list, goods)
 		}
-		jsonBytes, err := json.Marshal(list)
-		if err != nil {
-			panic(err)
-		}
+		// jsonBytes, err := json.Marshal(list)
+		// if err != nil {
+		// 	panic(err)
+		// }
 
-		jsonString := string(jsonBytes)
+		// jsonString := string(jsonBytes)
 
 		c.JSON(200, gin.H{
-			"list": jsonString,
+			"list": list,
 		})
 	})
 
