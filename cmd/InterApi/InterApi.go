@@ -154,6 +154,7 @@ func proc(){
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
+		config.Stdlog.Println("select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
 		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
 		if err != nil { 
 			config.Stdlog.Println(err)
@@ -161,7 +162,7 @@ func proc(){
 		defer rows.Close()
 
 		var list []Goods
-		config.Stdlog.Println("1")
+		
 		for rows.Next(){
 			var goods Goods
 			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
