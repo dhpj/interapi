@@ -91,10 +91,10 @@ type Mapper struct {
 }
 
 type Goods struct {
-	GoodCd string
-	GoodNm string
-	SalePrc string
-	HangPrc string
+	GoodCd sql.NullString
+	GoodNm sql.NullString
+	SalePrc sql.NullInt64
+	HangPrc sql.NullInt64
 }
 
 func proc(){
@@ -160,16 +160,16 @@ func proc(){
 		}
 		defer rows.Close()
 
-		list := []Goods{}
+		var list []Goods
 		config.Stdlog.Println("1")
 		for rows.Next(){
-			// var goods Goods
-			// err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
-			// config.Stdlog.Println(goods.GoodNm)
-			// if err != nil { 
-			// 	config.Stdlog.Println(err)
-			// }
-			// list = append(list, goods)
+			var goods Goods
+			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
+			config.Stdlog.Println(goods.GoodNm)
+			if err != nil { 
+				config.Stdlog.Println(err)
+			}
+			list = append(list, goods)
 		}
 		jsonBytes, err := json.Marshal(list)
 		if err != nil {
