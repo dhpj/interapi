@@ -6,6 +6,7 @@ import(
 	"os/signal"
 	"syscall"
 	"database/sql"
+	"encoding/json"
 
 	config "inter/config"
 	db "inter/dbpool"
@@ -89,6 +90,10 @@ type Mapper struct {
 	PosId        string `json:"pos_id"`
 }
 
+type Goods struct {
+
+}
+
 func proc(){
 	config.Stdlog.Println("Inter API 시작")
 
@@ -108,8 +113,6 @@ func proc(){
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
-		config.Stdlog.Println(mp.MemId)
-		config.Stdlog.Println(mp.PosId)
 
 		var cnt sql.NullInt64
 		err = db.QueryRowContext(ctx, "select count(1) as cnt from key_mapper where mem_id = ?", mp.MemId).Scan(&cnt)
@@ -139,32 +142,55 @@ func proc(){
 				"code": 1,
 			})
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	})
+	r.POST("/get_goods", func(c *gin.Context){
+		db := db.DB
+
+		mp := Mapper{}
+		ctx := c.Request.Context()
+		err := c.ShouldBindJSON(&mp)
+		if err != nil { 
+			config.Stdlog.Println(err)
+		}
+
+		reqrows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = ?", mp.PosId)
+		if err != nil { 
+			config.Stdlog.Println(err)
+		}
+		jsonBytes, err := json.Marshal(reqrows)
+		if err != nil {
+			panic(err)
+		}
+
+		jsonString := string(jsonBytes)
+		c.JSON(200, gin.H{
+			"list": jsonString,
+		})
+	})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	r.Run(":3333")
 }

@@ -15,11 +15,11 @@ var DB2 *sql.DB
 
 func InitDB() {
 	// MSSQL 연결 정보
-    server := "localhost"
-    port := 1433
-    user := "sa"
-    password := "dhn7985!"
-    database := "test"
+    server := "up.red-pos.com"
+    port := 8992
+    user := "SA"
+    password := "redpos3771"
+    database := "test_db"
 
     connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s", server, user, password, port, database)
 
