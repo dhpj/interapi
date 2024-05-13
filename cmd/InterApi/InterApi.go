@@ -151,11 +151,28 @@ func proc(){
 		mp := Mapper{}
 		ctx := c.Request.Context()
 		err := c.ShouldBindJSON(&mp)
-		if err != nil { 
+		if err != nil {
 			config.Stdlog.Println(err)
 		}
-
-		rows, err := db.QueryContext(ctx, "select cGoodcd, cGoodNm, fSalePrc, fHangPrc from GOOD1000LOG where cManID = '"+mp.PosId+"'")
+		sql := `
+			select
+				a.cGoodcd,
+				a.cGoodNm,
+				a.fSalePrc,
+				a.fHangPrc
+			from
+				GOOD1000LOG a
+			inner join (
+				select
+					cGoodcd,
+					max(cUdate) as cm
+				from
+					GOOD1000LOG
+				where cManID = '`+mp.PosId+`'
+				group by cGoodcd
+			) b on a.cGoodcd = b.cGoodcd and a.cUdate = b.cm
+		`
+		rows, err := db.QueryContext(ctx, sql)
 		if err != nil { 
 			config.Stdlog.Println(err)
 		}
