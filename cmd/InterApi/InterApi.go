@@ -146,6 +146,7 @@ func proc(){
 			})
 		}
 	})
+
 	r.POST("/get_goods", func(c *gin.Context){
 		db := db.DB
 		mp := Mapper{}
@@ -158,19 +159,9 @@ func proc(){
 			select
 				a.cGoodcd,
 				a.cGoodNm,
-				a.fSalePrc,
-				a.fHangPrc
+				a.fSalePrc
 			from
-				GOOD1000LOG a
-			inner join (
-				select
-					cGoodcd,
-					max(cUdate) as cm
-				from
-					GOOD1000LOG
-				where cManID = '`+mp.PosId+`'
-				group by cGoodcd
-			) b on a.cGoodcd = b.cGoodcd and a.cUdate = b.cm
+				GOOD1000 a
 		`
 		rows, err := db.QueryContext(ctx, sql)
 		if err != nil { 
@@ -182,7 +173,7 @@ func proc(){
 		
 		for rows.Next(){
 			var goods Goods
-			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc, &goods.HangPrc)
+			err := rows.Scan(&goods.GoodCd, &goods.GoodNm, &goods.SalePrc)
 			if err != nil { 
 				config.Stdlog.Println(err)
 			}
